@@ -1691,12 +1691,13 @@ void GCS_MAVLINK::send_message(enum ap_message id)
 void GCS_MAVLINK::packetReceived(const mavlink_status_t &status,
                                  const mavlink_message_t &msg)
 {
-#if 0	
-      unsigned char decrypt[msg.len];
-      unsigned char packet[msg.len];
-     memcpy(packet,(void *)msg.payload64, msg.len); 
+#if 1	
+     unsigned char decrypt[msg.len];
+     unsigned char packet[msg.len];
+     memcpy(packet,_MAV_PAYLOAD(&msg), msg.len); 
+     //_mavlink_decrypt_packet((unsigned char *)(&((msg).payload64[0])), decrypt, msg.len);
      _mavlink_decrypt_packet(packet, decrypt, msg.len);
-     memcpy((void *)msg.payload64,decrypt, msg.len); 
+     memcpy(_MAV_PAYLOAD_NON_CONST(&msg),decrypt, msg.len); 
 #endif	
 	
     // we exclude radio packets because we historically used this to
